@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Biomedical Signal Visualization Demo</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .info { background: #f0f8ff; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .features { background: #f9f9f9; padding: 15px; border-radius: 5px; }
+        h1 { color: #2c3e50; text-align: center; }
+        h2 { color: #34495e; }
+        ul { line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Biomedical Signal Processing Visualization</h1>
+        
+        <div class="info">
+            <h2>📊 Interactive Demo</h2>
+            <p><strong>This is a demonstration of the biomedical signal visualization tool created for the Quasar Coding Challenge.</strong></p>
+            <p>The actual visualization would show:</p>
+            <ul>
+                <li><strong>EEG Signals (µV scale)</strong>: 21 channels including Fz, Cz, P3, C3, F3, F4, C4, P4, Fp1, Fp2, T3, T4, T5, T6, O1, O2, F7, F8, A1, A2, Pz</li>
+                <li><strong>ECG Signals (mV scale)</strong>: X1:LEOG (Left ECG) and X2:REOG (Right ECG)</li>
+                <li><strong>CM Reference</strong>: Common Mode reference signal (large amplitude, separate scale)</li>
+            </ul>
+        </div>
+
+        <div id="demoPlot" style="width:100%;height:600px;"></div>
+
+        <div class="features">
+            <h2>🎯 Features Implemented</h2>
+            <ul>
+                <li><strong>Multi-axis scaling</strong>: EEG (µV), ECG (mV), CM (separate scale)</li>
+                <li><strong>Interactive controls</strong>: Scroll, pan, zoom, hover</li>
+                <li><strong>Range selector buttons</strong>: 1s, 5s, 10s, 30s, All</li>
+                <li><strong>Channel toggle</strong>: Click legend to show/hide channels</li>
+                <li><strong>Export functionality</strong>: PNG and HTML export</li>
+                <li><strong>Range slider</strong>: Bottom navigation panel</li>
+                <li><strong>Hover information</strong>: Detailed signal values and timing</li>
+            </ul>
+
+            <h2>🚀 How to Run the Full Visualization</h2>
+            <ol>
+                <li>Ensure Python is installed</li>
+                <li>Install dependencies: <code>pip install pandas plotly numpy</code></li>
+                <li>Run the main script: <code>python plot_signals.py</code></li>
+                <li>Or use advanced features: <code>python plot_signals_advanced.py --help</code></li>
+            </ol>
+
+            <h2>📁 Files Created</h2>
+            <ul>
+                <li><code>plot_signals.py</code> - Main visualization script</li>
+                <li><code>plot_signals_advanced.py</code> - Advanced features (channel selection, normalization)</li>
+                <li><code>README.md</code> - Comprehensive documentation</li>
+                <li><code>requirements.txt</code> - Python dependencies</li>
+                <li><code>demo_features.py</code> - Feature demonstrations</li>
+                <li><code>USAGE_EXAMPLES.md</code> - Practical usage examples</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Create a demo plot showing the concept
+        const demoData = [];
+        
+        // Generate sample EEG data (µV scale)
+        const time = [];
+        const eegData = {};
+        const channelNames = ['Fz', 'Cz', 'Pz', 'F3', 'F4', 'C3', 'C4'];
+        const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2'];
+        
+        for (let i = 0; i < 1000; i++) {
+            time.push(i * 0.0033); // 300 Hz sampling rate
+        }
+        
+        channelNames.forEach((channel, idx) => {
+            const data = [];
+            for (let i = 0; i < 1000; i++) {
+                // Simulate EEG signal with different frequencies and amplitudes
+                const baseFreq = 10 + idx * 2;
+                const amplitude = 50 + idx * 10;
+                const noise = (Math.random() - 0.5) * 20;
+                const signal = amplitude * Math.sin(2 * Math.PI * baseFreq * time[i] / 60) + noise;
+                data.push(signal);
+            }
+            eegData[channel] = data;
+        });
+        
+        // Add EEG traces
+        channelNames.forEach((channel, idx) => {
+            demoData.push({
+                x: time,
+                y: eegData[channel],
+                type: 'scatter',
+                mode: 'lines',
+                name: `EEG: ${channel}`,
+                line: { color: colors[idx], width: 1 },
+                yaxis: 'y',
+                hovertemplate: `<b>${channel}</b><br>Time: %{x:.3f}s<br>EEG: %{y:.1f} µV<br><extra></extra>`
+            });
+        });
+        
+        // Generate sample ECG data (mV scale)
+        const ecgData = {
+            'X1:LEOG': [],
+            'X2:REOG': []
+        };
+        
+        ['X1:LEOG', 'X2:REOG'].forEach((channel, idx) => {
+            const data = [];
+            for (let i = 0; i < 1000; i++) {
+                // Simulate ECG signal with heart rate of ~72 BPM
+                const heartRate = 72;
+                const beatFreq = heartRate / 60;
+                const amplitude = 2000 + idx * 500;
+                const noise = (Math.random() - 0.5) * 200;
+                const signal = amplitude * Math.sin(2 * Math.PI * beatFreq * time[i]) + noise;
+                data.push(signal / 1000); // Convert to mV
+            }
+            ecgData[channel] = data;
+        });
+        
+        // Add ECG traces
+        ['X1:LEOG', 'X2:REOG'].forEach((channel, idx) => {
+            demoData.push({
+                x: time,
+                y: ecgData[channel],
+                type: 'scatter',
+                mode: 'lines',
+                name: `ECG: ${channel}`,
+                line: { color: idx === 0 ? '#ff6b6b' : '#4ecdc4', width: 2 },
+                yaxis: 'y2',
+                hovertemplate: `<b>${channel}</b><br>Time: %{x:.3f}s<br>ECG: %{y:.1f} mV<br><extra></extra>`
+            });
+        });
+        
+        // Generate sample CM data
+        const cmData = [];
+        for (let i = 0; i < 1000; i++) {
+            const amplitude = 1000;
+            const noise = (Math.random() - 0.5) * 100;
+            const signal = amplitude * Math.sin(2 * Math.PI * 0.5 * time[i]) + noise;
+            cmData.push(signal);
+        }
+        
+        // Add CM trace
+        demoData.push({
+            x: time,
+            y: cmData,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'CM: Reference',
+            line: { color: '#ff9f43', width: 1.5 },
+            yaxis: 'y3',
+            hovertemplate: '<b>CM Reference</b><br>Time: %{x:.3f}s<br>CM: %{y:.1f} µV<br><extra></extra>'
+        });
+        
+        const layout = {
+            title: {
+                text: 'Interactive Biomedical Signal Visualization<br><sub>EEG (µV) | ECG (mV) | CM Reference</sub>',
+                x: 0.5,
+                font: { size: 16 }
+            },
+            xaxis: {
+                title: 'Time (seconds)',
+                rangeslider: { visible: true },
+                type: 'linear'
+            },
+            yaxis: {
+                title: 'EEG Channels (µV)',
+                side: 'left',
+                showgrid: true,
+                gridcolor: 'lightgray'
+            },
+            yaxis2: {
+                title: 'ECG Channels (mV)',
+                overlaying: 'y',
+                side: 'right',
+                showgrid: false
+            },
+            yaxis3: {
+                title: 'CM Reference (µV)',
+                overlaying: 'y',
+                side: 'right',
+                position: 0.95,
+                showgrid: false
+            },
+            legend: {
+                orientation: 'h',
+                yanchor: 'bottom',
+                y: 1.02,
+                xanchor: 'right',
+                x: 1,
+                font: { size: 10 }
+            },
+            height: 600,
+            hovermode: 'x unified'
+        };
+        
+        const config = {
+            displayModeBar: true,
+            displaylogo: false,
+            toImageButtonOptions: {
+                format: 'png',
+                filename: 'biomedical_signals_demo',
+                height: 600,
+                width: 1200,
+                scale: 2
+            }
+        };
+        
+        Plotly.newPlot('demoPlot', demoData, layout, config);
+    </script>
+</body>
+</html>
