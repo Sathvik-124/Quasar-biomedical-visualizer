@@ -228,8 +228,12 @@ If given more time, I would add:
 
 ## License
 
-This project was created for the Quasar Coding Challenge. Please refer to your organization's policies for usage and distribution.
+This project was created for the Quasar Coding Challenge. Please refer to Quasar organization's policies for usage and distribution.
 
 ## Contact
 
-For questions or issues, please refer to the challenge requirements or contact the development team.
+## Contact
+
+Created by **Sai Sathvik Yadlapalli** 
+🌐 GitHub: [Sathvik-124](https://github.com/Sathvik-124)
+.
