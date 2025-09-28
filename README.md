@@ -159,6 +159,11 @@ The tool generates an interactive Plotly figure with:
 - **Legend**: Horizontal layout with all channel names
 - **Controls**: Range selector, zoom, pan, export buttons
 
+## 📸 Demo Screenshot
+
+Here is an example of the interactive EEG/ECG visualization:
+![Demo Screenshot](media/demo.png)
+
 ## Future Enhancements
 
 If given more time, I would add:
@@ -179,24 +184,6 @@ If given more time, I would add:
    - Signal overlay comparison mode
    - Annotations and markers for events
    - Custom color schemes and themes
-
-4. **Data Management**:
-   - Support for multiple file formats (EDF, BrainVision, etc.)
-   - Batch processing of multiple files
-   - Data export in various formats
-   - Session saving and loading
-
-5. **Performance Optimizations**:
-   - Data chunking for large files
-   - WebGL rendering for smooth interactions
-   - Memory-efficient data handling
-   - Progressive loading for long recordings
-
-6. **Clinical Features**:
-   - Standard montage views (10-20 system)
-   - Seizure detection algorithms
-   - Heart rate variability analysis
-   - Clinical report generation
 
 ## Troubleshooting
 
@@ -229,8 +216,6 @@ If given more time, I would add:
 ## License
 
 This project was created for the Quasar Coding Challenge. Please refer to Quasar organization's policies for usage and distribution.
-
-## Contact
 
 ## Contact
 
