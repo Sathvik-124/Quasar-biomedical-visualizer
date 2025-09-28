@@ -162,7 +162,7 @@ The tool generates an interactive Plotly figure with:
 ## 📸 Demo Screenshot
 
 Here is an example of the interactive EEG/ECG visualization:
-![Demo Screenshot](media/Demo of EEG, ECG visualization.png)
+![Demo Screenshot](media/demo.png)
 
 ## Future Enhancements
 
